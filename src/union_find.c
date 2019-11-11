@@ -1,4 +1,5 @@
 #include "union_find.h"
+#include "stdlib.h"
 
 #include <stdint.h>
 
@@ -41,25 +42,34 @@ struct union_find
 
 union_find_t uf_create(size_t n)
 {
-    // TODO: Fix this.
-    return NULL;
+    union_find_t res  = malloc(sizeof(struct union_find) +
+                                       n * sizeof(object_t) +
+                                       n * sizeof(rank_t));
+    if (!res) return NULL;
+
+    res->size_ = n;
+
+    return res;
 }
 
 void uf_destroy(union_find_t uf)
 {
-    // TODO: Write this.
+    free(uf);
 }
 
 bool uf_union(union_find_t uf, object_t m, object_t n)
 {
-    // TODO: Fix this.
     return false;
 }
 
 object_t uf_find(union_find_t uf, object_t m)
 {
-    // TODO: Fix this.
-    return m;
+    while (*uf->id_ != '\0') {
+        if (*uf->id_ == m){
+            return *uf->id_;
+        }
+        uf->id_++;
+    }
 }
 
 bool uf_same_set(union_find_t uf, object_t m, object_t n)
