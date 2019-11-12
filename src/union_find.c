@@ -46,9 +46,7 @@ union_find_t uf_create(size_t n)
                                        n * sizeof(object_t) +
                                        n * sizeof(rank_t));
     if (!res) return NULL;
-
     res->size_ = n;
-
     return res;
 }
 
@@ -57,18 +55,30 @@ void uf_destroy(union_find_t uf)
     free(uf);
 }
 
+// TODO: Why create a uf and destroy previous one instead of just changing current uf?
 bool uf_union(union_find_t uf, object_t m, object_t n)
 {
-    return false;
+    if (uf_same_set(uf, m, n)){
+        return false;
+    }
+    else {
+        if(uf->rank_[m] > uf->rank_[n]){
+            uf->id_[m] = uf_find(uf, n);
+        }
+        else {
+            uf->id_[n] = uf_find(uf, m);
+        }
+        return true;
+    }
 }
 
 object_t uf_find(union_find_t uf, object_t m)
 {
-    while (*uf->id_ != '\0') {
-        if (*uf->id_ == m){
-            return *uf->id_;
-        }
-        uf->id_++;
+    if (uf->id_[m] == m){
+        return m;
+    }
+    else {
+        uf_find(uf, uf->id_[m]);
     }
 }
 
