@@ -1,6 +1,6 @@
 #include "union_find.h"
 #include "stdlib.h"
-
+#include "libipd.h"
 #include <stdint.h>
 
 // You can use an 8-bit integer (a/k/a a byte, a/k/a an unsigned char)
@@ -42,20 +42,35 @@ struct union_find
 
 union_find_t uf_create(size_t n)
 {
-    union_find_t res  = malloc(sizeof(struct union_find) +
-                                       n * sizeof(object_t) +
-                                       n * sizeof(rank_t));
-    if (!res) return NULL;
+    union_find_t res = malloc(sizeof *res);
+    if (!res) goto bail1;
+
+    res->id_ = malloc(n * sizeof(object_t));
+    if (!res->id_) goto bail2;
+
+    res->rank_ = malloc(n * sizeof(rank_t));
+    if (!res->id_) goto bail3;
+
+
     res->size_ = n;
     return res;
-}
 
+    bail3:
+    free(res->id_);
+    bail2:
+    free(res);
+    bail1:
+    return NULL;
+}
+// TODO: Consider null
 void uf_destroy(union_find_t uf)
 {
+    free(uf->id_);
+    free(uf->rank_);
     free(uf);
 }
 
-// TODO: Why create a uf and destroy previous one instead of just changing current uf?
+//TODO: Update rank
 bool uf_union(union_find_t uf, object_t m, object_t n)
 {
     if (uf_same_set(uf, m, n)){
@@ -78,7 +93,9 @@ object_t uf_find(union_find_t uf, object_t m)
         return m;
     }
     else {
-        uf_find(uf, uf->id_[m]);
+        object_t r = uf_find(uf, uf->id_[m]);
+        uf->id_[m] = r;
+        return r;
     }
 }
 
@@ -94,3 +111,18 @@ size_t uf_size(union_find_t uf)
     return uf->size_;
 }
 
+void set_uf_id_(union_find_t uf) {
+    size_t index = 0;
+    while(index < uf->size_) {
+        uf->id_[index] = index;
+        index++;
+    }
+}
+
+void set_uf_id_index(union_find_t uf, size_t index, size_t value) {
+    uf->id_[index] = value; 
+}
+
+object_t get_uf_id_index(union_find_t uf, size_t index) {
+    return uf->id_[index];
+}

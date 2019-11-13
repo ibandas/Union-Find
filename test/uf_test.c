@@ -24,12 +24,23 @@ static void create_size_and_destroy(size_t n)
     uf_destroy(uf);
 }
 
-static void test_uf_find(size_t n, object_t m)
+static void test_uf_find(size_t n)
 {
-
     union_find_t uf = uf_create(n);
-    uf_find(uf, m);
+    set_uf_id_(uf);
+    CHECK_UINT(uf_find(uf, 1), 1);
+    CHECK_UINT(uf_find(uf, 3), 3);
+    set_uf_id_index(uf, 3, 2);
+    CHECK_UINT(uf_find(uf, 3), 2);
+    set_uf_id_index(uf, 9, 0);
+    CHECK_UINT(uf_find(uf, 9), 0);
+    set_uf_id_index(uf, 9, 5);
+    CHECK_UINT(uf_find(uf, 9), 5);
+    set_uf_id_index(uf, 5, 3);
+    CHECK_UINT(uf_find(uf, 9), 2);
+    CHECK_UINT(uf_find(uf, 5), 2);
 
+    uf_destroy(uf);
 }
 
 int main()
@@ -39,4 +50,5 @@ int main()
     create_size_and_destroy(10);
     create_size_and_destroy(100);
     create_size_and_destroy(5000);
+    test_uf_find(10);
 }

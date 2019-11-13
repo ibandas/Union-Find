@@ -40,3 +40,13 @@ bool uf_same_set(union_find_t, object_t, object_t);
 // than the largest valid object).
 size_t uf_size(union_find_t);
 
+// Sets the id_ of the union_find
+void set_uf_id_(union_find_t);
+
+// Sets a index of id_ to a value
+void set_uf_id_index(union_find_t, size_t, size_t);
+
+
+// Gets a value from index of id_
+object_t get_uf_id_index(union_find_t, size_t);
+
