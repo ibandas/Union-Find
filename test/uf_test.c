@@ -65,7 +65,7 @@ static void test_uf_union_part1(void) {
     uf_union(uf, 1, 5);
     CHECK_UINT(get_uf_id_index(uf, 1), 4);
     CHECK_UINT(get_uf_id_index(uf, 5), 9);
-    get_all_uf_test(uf);
+    // get_all_uf_test(uf);
     uf_destroy(uf);
 }
 
