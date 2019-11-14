@@ -55,7 +55,7 @@ static void mst_test_01()
     size_t n = 5;
     wu_graph_t g = example_graph_01(n);
     wu_graph_t mst = kruskal_mst(g);
-    CHECK_INT(wug_edge_count(g), 6);
+    CHECK_INT(wug_edge_count(mst), 4);
     wug_destroy(mst);
 }
 
