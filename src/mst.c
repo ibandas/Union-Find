@@ -13,10 +13,6 @@ wu_graph_t kruskal_mst(wu_graph_t g)
         goto finish;
 
 
-    //
-    // TODO: complete Kruskal's algorithm here
-    //
-
 
     // If you always return via this label then you'll always
     // clean up properly:

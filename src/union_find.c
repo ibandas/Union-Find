@@ -40,8 +40,7 @@ struct union_find
     size_t     size_;
 };
 
-union_find_t uf_create(size_t n)
-{
+union_find_t uf_create(size_t n) {
     union_find_t res = malloc(sizeof *res);
     if (!res) goto bail1;
 
@@ -53,6 +52,12 @@ union_find_t uf_create(size_t n)
 
 
     res->size_ = n;
+    size_t index = 0;
+    while(index < res->size_) {
+        res->id_[index] = index;
+        res->rank_[index] = 0;
+        index++;
+    }
     return res;
 
     bail3:
@@ -62,29 +67,35 @@ union_find_t uf_create(size_t n)
     bail1:
     return NULL;
 }
-// TODO: Consider null
 void uf_destroy(union_find_t uf)
 {
+    if (!uf) {
+        return;
+    }
     free(uf->id_);
     free(uf->rank_);
     free(uf);
 }
 
-//TODO: Update rank
+//Citation: https://algorithms.tutorialhorizon.com/disjoint-set-union-find-algorithm-union-by-rank-and-path-compression/
 bool uf_union(union_find_t uf, object_t m, object_t n)
 {
-    if (uf_same_set(uf, m, n)){
+    object_t m_root = uf_find(uf, m);
+    object_t n_root = uf_find(uf, n);
+    if (m_root == n_root) {
         return false;
     }
-    else {
-        if(uf->rank_[m] > uf->rank_[n]){
-            uf->id_[m] = uf_find(uf, n);
-        }
-        else {
-            uf->id_[n] = uf_find(uf, m);
-        }
-        return true;
+    if(uf->rank_[m_root] < uf->rank_[n_root]){
+        uf->id_[m_root] = n_root;
     }
+    else if (uf->rank_[m_root] > uf->rank_[n_root]) {
+        uf->id_[n_root] = m_root;
+    }
+    else {
+        uf->id_[m_root] = n_root;
+        uf->rank_[n_root] = uf->rank_[n_root] + 1;
+    }
+    return true;
 }
 
 object_t uf_find(union_find_t uf, object_t m)
@@ -111,18 +122,18 @@ size_t uf_size(union_find_t uf)
     return uf->size_;
 }
 
-void set_uf_id_(union_find_t uf) {
-    size_t index = 0;
-    while(index < uf->size_) {
-        uf->id_[index] = index;
-        index++;
-    }
-}
-
 void set_uf_id_index(union_find_t uf, size_t index, size_t value) {
-    uf->id_[index] = value; 
+    uf->id_[index] = value;
 }
 
 object_t get_uf_id_index(union_find_t uf, size_t index) {
     return uf->id_[index];
+}
+
+object_t get_all_uf_test(union_find_t uf) {
+    size_t index = 0;
+    while(index < uf->size_) {
+        printf("%lu ", uf->id_[index]);
+        index++;
+    }
 }
