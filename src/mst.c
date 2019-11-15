@@ -46,13 +46,6 @@ wu_graph_t kruskal_mst(wu_graph_t g)
         object_t u = uf_find(uf, out[index].u);
         object_t v = uf_find(uf, out[index].v);
         if (u != v) {
-//            printf("%lu", out[index].u);
-//            printf("\n");
-//            printf("%lu", out[index].v);
-//            printf("\n");
-//            printf("%lf", out[index].w);
-//            printf("\n");
-//            printf("\n");
             wug_set_edge(mst, out[index].u, out[index].v, out[index].w);
             uf_union(uf, u, v);
         }
