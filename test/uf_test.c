@@ -69,6 +69,20 @@ static void test_uf_union_part1(void) {
     uf_destroy(uf);
 }
 
+static void test_uf_union_part2(void) {
+    union_find_t uf = uf_create(5);
+    uf_union(uf, 3, 4);
+    CHECK_UINT(get_uf_id_index(uf, 3), 4);
+    uf_union(uf, 2, 3);
+    CHECK_UINT(get_uf_id_index(uf, 2), 4);
+    uf_union(uf, 0, 1);
+    CHECK_UINT(get_uf_id_index(uf, 0), 1);
+    uf_union(uf, 1, 3);
+    CHECK_UINT(get_uf_id_index(uf, 1), 4);
+    CHECK_UINT(get_uf_id_index(uf, 0), 1);
+    uf_destroy(uf);
+}
+
 // Code Walk Tests
 static void test_union_0_1(void)
 {
@@ -92,4 +106,5 @@ int main()
     test_uf_find();
     test_union_0_1();
     test_uf_union_part1();
+    test_uf_union_part2();
 }

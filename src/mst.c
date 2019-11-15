@@ -37,23 +37,27 @@ wu_graph_t kruskal_mst(wu_graph_t g)
     if (!(mst = wug_create(wug_size(g))))
         goto finish;
 
-    size_t index = 0;
-    if (used > 1) {
-        while (index < used - 1) {
-            object_t u = uf_find(uf, out[index].u);
-            object_t v = uf_find(uf, out[index].v);
-            if (u != v) {
-                wug_set_edge(mst, out[index].u, out[index].v, out[index].w);
-                uf_union(uf, u, v);
-            }
-            index++;
-        }
-    }
     // One edge just returns the current tree since it is a MST
-    else if (used == 1) {
+    if (used == 1) {
         return g;
     }
-
+    size_t index = 0;
+    while (index < used) {
+        object_t u = uf_find(uf, out[index].u);
+        object_t v = uf_find(uf, out[index].v);
+        if (u != v) {
+//            printf("%lu", out[index].u);
+//            printf("\n");
+//            printf("%lu", out[index].v);
+//            printf("\n");
+//            printf("%lf", out[index].w);
+//            printf("\n");
+//            printf("\n");
+            wug_set_edge(mst, out[index].u, out[index].v, out[index].w);
+            uf_union(uf, u, v);
+        }
+        index++;
+    }
     // If you always return via this label then you'll always
     // clean up properly:
     finish:

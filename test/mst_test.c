@@ -134,7 +134,6 @@ static void mst_test_02()
     CHECK_UINT(out_mst[8].v, 9);
     CHECK_DOUBLE(out_mst[8].w, 5);
 
-    view_mst_test(mst_used, out_mst);
     wug_destroy(mst);
 }
 
@@ -210,6 +209,56 @@ static void mst_test_05() {
     wug_destroy(mst);
 }
 
+// Six Vertices + Seven Edges
+// Two well connected graphs connected by one heavy edge (2, 3)
+static wu_graph_t example_graph_06()
+{
+    wu_graph_t g = wug_create(6);
+    wug_set_edge(g, 0, 1, 1);
+    wug_set_edge(g, 0, 2, 1);
+    wug_set_edge(g, 1, 2, 2);
+    wug_set_edge(g, 2, 3, 3);
+    wug_set_edge(g, 3, 4, 2);
+    wug_set_edge(g, 3, 5, 1);
+    wug_set_edge(g, 4, 5, 1);
+
+    return g;
+}
+
+static void mst_test_06() {
+    wu_graph_t g = example_graph_06();
+    wu_graph_t mst = kruskal_mst(g);
+    CHECK_INT(wug_edge_count(mst), 5);
+    struct wu_edge out_mst[wug_edge_count(mst)];
+    size_t mst_used = wug_get_edges(mst, out_mst, wug_edge_count(mst));
+    //First Edge
+    CHECK_UINT(out_mst[0].u, 0);
+    CHECK_UINT(out_mst[0].v, 1);
+    CHECK_DOUBLE(out_mst[0].w, 1);
+
+    //Second Edge
+    CHECK_UINT(out_mst[1].u, 0);
+    CHECK_UINT(out_mst[1].v, 2);
+    CHECK_DOUBLE(out_mst[1].w, 1);
+
+    //Third Edge
+    CHECK_UINT(out_mst[2].u, 2);
+    CHECK_UINT(out_mst[2].v, 3);
+    CHECK_DOUBLE(out_mst[2].w, 3);
+
+    //Fourth Edge
+    CHECK_UINT(out_mst[3].u, 3);
+    CHECK_UINT(out_mst[3].v, 5);
+    CHECK_DOUBLE(out_mst[3].w, 1);
+
+    //Fifth Edge
+    CHECK_UINT(out_mst[4].u, 4);
+    CHECK_UINT(out_mst[4].v, 5);
+    CHECK_DOUBLE(out_mst[4].w, 1);
+
+    wug_destroy(mst);
+}
+
 int main()
 {
     empty_mst_test();
@@ -218,4 +267,5 @@ int main()
     mst_test_03();
     mst_test_04();
     mst_test_05();
+    mst_test_06();
 }
